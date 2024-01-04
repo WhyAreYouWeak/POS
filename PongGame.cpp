@@ -1,57 +1,88 @@
-#include <complex>
-#include "Ball.cpp"
-class PongGame {
-private:
-    Ball ball;
-    Paddle paddleLeft;
-    Paddle paddleRight;
-    int screenWidth;
-    int screenHeight;
-public:
-    PongGame(int width, int height): screenWidth(width), screenHeight(height),
-              ball( screenWidth / 2, screenHeight / 2 , 20),
-              paddleLeft(20, screenHeight / 2 - 100 / 2, 20, 100),
-              paddleRight(screenWidth , screenHeight / 2 - 100 / 2, 20, 100 ) {}
+#include <string>
+#include "PongGame.h"
 
+PongGame::PongGame(int width, int height, char* title)
+        : screenWidth(width), screenHeight(height), windowTitle(title),
+          ball(width / 2, height / 2, 20),
+          player1Paddle(20, height / 2 - 100 / 2, 20, 100),
+          player2Paddle(width - 20 - 20, height / 2 - 100 / 2, 20, 100),
+          player1Score(0), player2Score(0) {
+    InitWindow(screenWidth, screenHeight, windowTitle);
+    SetTargetFPS(60);
+}
 
-    void initialize() {
+PongGame::~PongGame() {
+    CloseWindow();
+}
+
+void PongGame::run() {
+    initializePositions();
+
+    while (!WindowShouldClose()) {
+        update();
+        draw();
+    }
+}
+
+void PongGame::initializePositions() {
+    ball.setPosition(screenWidth / 2, screenHeight / 2);
+    player1Paddle.setPositionY(screenHeight / 2 - 100 / 2);
+    player2Paddle.setPositionY(screenHeight / 2 - 100 / 2);
+}
+
+void PongGame::update() {
+    ball.move();
+    ball.bounceOnWall(screenHeight);
+    ball.bounceOnPaddle(player1Paddle);
+    ball.bounceOnPaddle(player2Paddle);
+
+    //
+    if (IsKeyDown(KEY_UP)) {
+        player2Paddle.moveY(screenHeight, -5.0);
+    }
+    if (IsKeyDown(KEY_DOWN)) {
+        player2Paddle.moveY(screenHeight, 5.0);
     }
 
-    void update() {
-        ball.move();
-        ball.bounceOnWall(screenHeight);
-        ball.bounceOnPaddle(paddleLeft);
-        ball.bounceOnPaddle(paddleRight);
-
-        if (IsKeyDown(KEY_UP)) {
-            paddleLeft.moveUp(screenHeight, 5);
-        }
-        if (IsKeyDown(KEY_DOWN)) {
-            paddleRight.moveDown(screenHeight, 5);
-        }
-
-        if (this->ball.getPositionY() < paddleLeft.getPossitionY() + paddleLeft.getHeight() / 2) {
-            paddleLeft.setPositionY(paddleLeft.getPossitionY() - ( 5 + std::abs(paddleLeft.getPossitionY() + paddleLeft.getHeight() / 2 - this->ball.getPositionY()) * 0.02));
-        } else {
-            paddleLeft.setPositionY(paddleLeft.getPossitionY() + ( 5 + std::abs(paddleLeft.getPossitionY() + paddleLeft.getHeight() / 2 - this->ball.getPositionY()) * 0.02));
-        }
-
-        if (this->ball.getPositionX() <= 0 || this->ball.getPositionX() >= screenWidth) {
-            initialize();
-        }
+    if (ball.getPositionY() < player1Paddle.getPositionY() + player1Paddle.getHeight() / 2) {
+        player1Paddle.moveY(screenHeight, -5.0);
+    } else {
+        player1Paddle.moveY(screenHeight, 5.0);
     }
 
-    void draw() {
-        BeginDrawing();
-        ClearBackground(RAYWHITE);
-
-        DrawRectangleRec(paddleLeft.getRectangle(), RED);
-        DrawRectangleRec(paddleRight.getRectangle(), BLUE);
-        DrawCircleV({this->ball.getPositionX(), this->ball.getPositionY()}, this->ball.getSize() / 2, GREEN);
-
-        for (int i = 0; i < screenHeight; i += 20) {
-            DrawRectangle(screenWidth / 2 - 1, i, 2, 10, BLACK);
-        }
-        EndDrawing();
+    if (ball.getPositionX() <= 0) {
+        player2Score++;
+        initializePositions();
+    } else if (ball.getPositionX() >= screenWidth) {
+        player1Score++;
+        initializePositions();
     }
-};
+}
+
+void PongGame::draw() {
+    BeginDrawing();
+
+    Color backgroundColor = {41, 57, 76, 255};
+    ClearBackground(backgroundColor);
+
+    DrawRectangleRec(player1Paddle.getRectangle(), RED);
+    DrawRectangleLinesEx(player1Paddle.getRectangle(), 2, BLACK);
+    DrawRectangleRec(player2Paddle.getRectangle(), BLUE);
+    DrawRectangleLinesEx(player2Paddle.getRectangle(), 2, BLACK);
+    DrawCircleV({ball.getPositionX(), ball.getPositionY()}, ball.getSize() / 2, ball.getColor());
+    DrawCircleLines(ball.getPositionX(), ball.getPositionY(), ball.getSize() / 2, BLACK);
+
+
+    DrawLine(screenWidth / 2, screenHeight, screenWidth / 2, 0, BLACK);
+
+    int textFontSize = 20;
+    int scoreFontSize = 40;
+
+    DrawText("Player 1", screenWidth / 4 - MeasureText("Player 1", textFontSize) - 20, 20, textFontSize, WHITE);
+    DrawText(std::to_string(player1Score).c_str(), screenWidth / 4, 20, scoreFontSize, RED);
+
+    DrawText("Player 2", 3 * screenWidth / 4 + 40, 20, textFontSize, WHITE);
+    DrawText(std::to_string(player2Score).c_str(), 3 * screenWidth / 4, 20, scoreFontSize, BLUE);
+
+    EndDrawing();
+}

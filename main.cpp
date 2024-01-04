@@ -1,17 +1,8 @@
-#include <complex>
-#include "raylib.h"
-#include "PongGame.cpp"
+#include "PongGame.h"
+
 int main() {
-    int screenWidth = 800;
-    int screenHeight = 450;
-    InitWindow(screenWidth, screenHeight, "Pong Game");
-    SetTargetFPS(60);
-    PongGame game(screenWidth, screenHeight);
-    game.initialize();
-    while (!WindowShouldClose()) {
-        game.update();
-        game.draw();
-    }
-    CloseWindow();
+    PongGame pongGame(800, 450, "Pong Game");
+    pongGame.run();
+
     return 0;
 }

@@ -1,34 +1,31 @@
-#include "raylib.h"
-class Paddle {
-private:
-    Rectangle rectangle;
-public:
-    Paddle(float x, float y, int width, int height) {
-        this->rectangle = { x, y, static_cast<float>(width), static_cast<float>(height) };
-    }
+#include "Paddle.h"
 
-    void moveUp(int screenHeight, int speed) {
-        if(rectangle.y > 0) {
-            rectangle.y -= speed;
-        }
-    }
+Paddle::Paddle(float x, float y, int width, int height) : rectangle({x, y, static_cast<float>(width), static_cast<float>(height)}) {}
 
-    void moveDown(int screenHeight, int speed) {
-        if(rectangle.y < screenHeight - rectangle.height ) {
-            rectangle.y += speed;
-        }
-    }
-    Rectangle getRectangle() {
-        return this->rectangle;
-    }
-    float getPossitionY() {
-        return this->rectangle.y;
-    };
+Paddle::~Paddle() = default;
 
-    float getHeight() {
-        return this->rectangle.height;
+void Paddle::moveY(int screenHeight, float distance) {
+    rectangle.y += distance;
+
+    if (rectangle.y < 0) {
+        rectangle.y = 0;
+    } else if (rectangle.y + rectangle.height > screenHeight) {
+        rectangle.y = screenHeight - rectangle.height;
     }
-    void setPositionY(float y) {
-        this->rectangle.y = y;
-    }
-};
+}
+
+float Paddle::getPositionY() {
+    return rectangle.y;
+}
+
+float Paddle::getHeight() {
+    return rectangle.height;
+}
+
+Rectangle Paddle::getRectangle() {
+    return rectangle;
+}
+
+void Paddle::setPositionY(float y) {
+    rectangle.y = y;
+}

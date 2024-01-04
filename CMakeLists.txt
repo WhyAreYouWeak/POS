@@ -1,13 +1,15 @@
 cmake_minimum_required(VERSION 3.23)
-project(Pong)
+project(POS)
 
 set(CMAKE_CXX_STANDARD 14)
 
 add_subdirectory(raylib)
-add_executable(Pong main.cpp
+add_executable(POS main.cpp
         Ball.cpp
         Paddle.cpp
         PongGame.cpp
-)
-target_link_libraries(Pong PRIVATE raylib)
-target_include_directories(Pong PRIVATE raylib/src)
+        PongGame.h
+        Paddle.h
+        Ball.h)
+target_link_libraries(POS PRIVATE raylib)
+target_include_directories(POS PRIVATE raylib/src)
