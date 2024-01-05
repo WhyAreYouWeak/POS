@@ -1,7 +1,9 @@
 #pragma once
-#include "raylib.h"
 #include "Ball.h"
 #include "Paddle.h"
+#include "raylib.h"
+#include "sockets/my_socket.h"
+
 class PongGame {
 private:
     int screenWidth;
@@ -14,7 +16,7 @@ private:
     int player2Score;
 
 public:
-    PongGame(int width, int height, char* title);
+    PongGame(int width, int height, const char* title);
     ~PongGame();
 
     void run();

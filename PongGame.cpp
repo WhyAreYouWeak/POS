@@ -1,7 +1,7 @@
 #include <string>
 #include "PongGame.h"
 
-PongGame::PongGame(int width, int height, char* title)
+PongGame::PongGame(int width, int height, const char* title)
         : screenWidth(width), screenHeight(height), windowTitle(title),
           ball(width / 2, height / 2, 20),
           player1Paddle(20, height / 2 - 100 / 2, 20, 100),

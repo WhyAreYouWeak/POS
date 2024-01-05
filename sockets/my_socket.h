@@ -1,7 +1,6 @@
 #ifndef SOCKETS_CLIENT_MY_SOCKET_H
 #define SOCKETS_CLIENT_MY_SOCKET_H
 
-#include <winsock2.h>
 #include <string>
 
 class MySocket {
@@ -12,10 +11,10 @@ public:
     void sendData(const std::string& data);
     void sendEndMessage();
 protected:
-    MySocket(SOCKET socket);
+    MySocket(unsigned long long socket);
 private:
     static const char * endMessage;
-    SOCKET connectSocket;
+    unsigned long long connectSocket;
 };
 
 #endif //SOCKETS_CLIENT_MY_SOCKET_H
