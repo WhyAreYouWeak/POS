@@ -2,7 +2,6 @@
 #include "raylib.h"
 #include "Ball.h"
 #include "Paddle.h"
-
 class PongGame {
 private:
     int screenWidth;
