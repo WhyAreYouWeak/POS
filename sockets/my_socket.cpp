@@ -1,7 +1,12 @@
 #include "my_socket.h"
 #include <stdexcept>
+<<<<<<< HEAD
 #include <winsock2.h>
 #include <ws2tcpip.h>
+=======
+#include <ws2tcpip.h>
+#include <winsock2.h>
+>>>>>>> 63578d6400fed8f276fc29de23dbffe78a32f701
 
 #define SOCKET_TERMINATE_CHAR '\0'
 
