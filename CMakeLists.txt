@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.23)
 project(POS)
 
-set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD 17)
 
 add_subdirectory(raylib)
 add_executable(POS main.cpp
@@ -10,6 +10,10 @@ add_executable(POS main.cpp
         PongGame.cpp
         PongGame.h
         Paddle.h
-        Ball.h)
-target_link_libraries(POS PRIVATE raylib)
+        Ball.h
+        sockets/my_socket.h
+        sockets/my_socket.cpp)
+target_link_libraries(POS PRIVATE raylib wsock32 ws2_32)
+
+
 target_include_directories(POS PRIVATE raylib/src)
