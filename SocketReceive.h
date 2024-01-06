@@ -8,6 +8,7 @@
 #include <vector>
 #include <mutex>
 #include <condition_variable>
+#include "Objects.h"
 
 struct MessageBuffer {
     std::vector<char> buffer;
@@ -16,7 +17,7 @@ struct MessageBuffer {
     bool disconnectFlag = false; // Flag pre odpojenie zo servera
 };
 
-void ReadSocketAsync(unsigned long long socket, MessageBuffer& messageBuffer);
+void ReadSocket(unsigned long long socket, MessageBuffer& messageBuffer, TempStruct& tempStruct);
 
 #endif //POS_SOCKETRECEIVE_H
 

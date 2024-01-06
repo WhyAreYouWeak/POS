@@ -2,20 +2,30 @@
 #include "sockets/my_socket.h"
 #include "SocketReceive.h"
 #include "PongGame.h"
+#include <mutex>
+#include "Objects.h"
 
 int main() {
-    MySocket* mySocket = MySocket::createConnection("frios2.fri.uniza.sk", 18948);
+    MySocket* mySocket = MySocket::createConnection("frios2.fri.uniza.sk", 19195);
     MessageBuffer messageBuffer;
-    std::thread readThread(ReadSocketAsync, mySocket->connectSocket, std::ref(messageBuffer));
+    TempStruct tempStruct;
+    std::thread readThread(ReadSocket, mySocket->connectSocket, std::ref(messageBuffer), std::ref(tempStruct));
 
    // mySocket->sendData("441;441");
    // mySocket->sendEndMessage();
 
-    PongGame pongGame(800, 450, "Pong Game", mySocket);
-    //std::thread communicationThread(&PongGame::updateData, &pongGame, std::ref(messageBuffer));
+    PongGame pongGame(800, 450, "Pong Game", mySocket, tempStruct);
+    pongGame.run();
+    /*
+    auto updateCallback = [&](int player1PaddleY, int player2PaddleY, int ballX, int ballY) {
+        std::lock_guard<std::mutex> lock(pongGame.gameMutex);
+
+        pongGame.updateData(player1PaddleY, player2PaddleY, ballX, ballY );
+    };
+    std::thread readThread(ReadSocketAsync, mySocket->connectSocket, std::ref(messageBuffer), std::function<void(int, int, int, int)> updateCallback);
+    std::thread communicationThread(&PongGame::updateData, &pongGame, std::ref(messageBuffer));
     //
     pongGame.run();
-/*
     if (mySocket != nullptr) {
         std::string input;
         mySocket->sendData("441;441");

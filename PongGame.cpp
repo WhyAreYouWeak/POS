@@ -1,13 +1,14 @@
 #include <string>
 #include <iostream>
 #include "PongGame.h"
+#include "Objects.h"
 
-PongGame::PongGame(int width, int height, const char* title, MySocket* socket)
+PongGame::PongGame(int width, int height, const char* title, MySocket* socket, TempStruct& tempStruct)
         : screenWidth(width), screenHeight(height), windowTitle(title),
           ball(width / 2, height / 2, 20),
           player1Paddle(20, height / 2 - 100 / 2, 20, 100),
           player2Paddle(width - 20 - 20, height / 2 - 100 / 2, 20, 100),
-          player1Score(0), player2Score(0), socket(socket) {
+          player1Score(0), player2Score(0), socket(socket), tempStruct(tempStruct) {
     InitWindow(screenWidth, screenHeight, windowTitle);
     SetTargetFPS(60);
 }
@@ -32,10 +33,16 @@ void PongGame::initializePositions() {
 }
 
 void PongGame::update() {
+    ball.setPosition(tempStruct.ballX, tempStruct.ballY);
+    player1Paddle.setPositionY(tempStruct.player1PaddleY);
+    player2Paddle.setPositionY(tempStruct.player2PaddleY);
+
+    /*
     ball.move();
     ball.bounceOnWall(screenHeight);
     ball.bounceOnPaddle(player1Paddle);
     ball.bounceOnPaddle(player2Paddle);
+     */
 
     if (IsKeyDown(KEY_UP)) {
         std::cout << "Sending up" << std::endl;
@@ -62,9 +69,21 @@ void PongGame::update() {
         initializePositions();
     }
 }
-
+/*
 void updateData(MessageBuffer* messageBuffer) {
     // komunikacia zo servera -> mutex lock a unlock
+}
+*/
+
+void PongGame::updateData(int player1PaddleY, int player2PaddleY, int ballX, int ballY) {
+    player1Paddle.setPositionY(player1PaddleY);
+    player2Paddle.setPositionY(player2PaddleY);
+    ball.setPosition(ballX, ballY);
+
+    std::cout << "player1PaddleY: " << player1PaddleY << std::endl;
+    std::cout << "player2PaddleY: " << player2PaddleY << std::endl;
+    std::cout << "ballX: " << ballX << std::endl;
+    std::cout << "ballY: " << ballY << std::endl;
 }
 
 void PongGame::draw() {

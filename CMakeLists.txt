@@ -11,7 +11,7 @@ add_executable(POS main.cpp
         main.cpp
         Ball.cpp
         Paddle.cpp
-        sockets/my_socket.cpp SocketReceive.cpp SocketReceive.h PongGame.cpp PongGame.h)
+        sockets/my_socket.cpp SocketReceive.cpp SocketReceive.h PongGame.cpp PongGame.h Objects.cpp Objects.h)
 target_link_libraries(POS PRIVATE raylib wsock32 ws2_32)
 
 
