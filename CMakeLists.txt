@@ -5,15 +5,13 @@ set(CMAKE_CXX_STANDARD 17)
 
 add_subdirectory(raylib)
 add_executable(POS main.cpp
-        PongGame.h
         Paddle.h
         Ball.h
         sockets/my_socket.h
         main.cpp
         Ball.cpp
         Paddle.cpp
-        PongGame.cpp
-        sockets/my_socket.cpp)
+        sockets/my_socket.cpp SocketReceive.cpp SocketReceive.h PongGame.cpp PongGame.h)
 target_link_libraries(POS PRIVATE raylib wsock32 ws2_32)
 
 

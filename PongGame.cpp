@@ -1,12 +1,13 @@
 #include <string>
+#include <iostream>
 #include "PongGame.h"
 
-PongGame::PongGame(int width, int height, const char* title)
+PongGame::PongGame(int width, int height, const char* title, MySocket* socket)
         : screenWidth(width), screenHeight(height), windowTitle(title),
           ball(width / 2, height / 2, 20),
           player1Paddle(20, height / 2 - 100 / 2, 20, 100),
           player2Paddle(width - 20 - 20, height / 2 - 100 / 2, 20, 100),
-          player1Score(0), player2Score(0) {
+          player1Score(0), player2Score(0), socket(socket) {
     InitWindow(screenWidth, screenHeight, windowTitle);
     SetTargetFPS(60);
 }
@@ -36,12 +37,15 @@ void PongGame::update() {
     ball.bounceOnPaddle(player1Paddle);
     ball.bounceOnPaddle(player2Paddle);
 
-    //
     if (IsKeyDown(KEY_UP)) {
-        player2Paddle.moveY(screenHeight, -5.0);
+        std::cout << "Sending up" << std::endl;
+        socket->sendData("up\0");
+       // player2Paddle.moveY(screenHeight, -5.0);
     }
     if (IsKeyDown(KEY_DOWN)) {
-        player2Paddle.moveY(screenHeight, 5.0);
+        std::cout << "Sending down" << std::endl;
+        socket->sendData("down\0");
+      //  player2Paddle.moveY(screenHeight, 5.0);
     }
 
     if (ball.getPositionY() < player1Paddle.getPositionY() + player1Paddle.getHeight() / 2) {
@@ -59,6 +63,10 @@ void PongGame::update() {
     }
 }
 
+void updateData(MessageBuffer* messageBuffer) {
+    // komunikacia zo servera -> mutex lock a unlock
+}
+
 void PongGame::draw() {
     BeginDrawing();
 
@@ -71,7 +79,6 @@ void PongGame::draw() {
     DrawRectangleLinesEx(player2Paddle.getRectangle(), 2, BLACK);
     DrawCircleV({ball.getPositionX(), ball.getPositionY()}, ball.getSize() / 2, ball.getColor());
     DrawCircleLines(ball.getPositionX(), ball.getPositionY(), ball.getSize() / 2, BLACK);
-
 
     DrawLine(screenWidth / 2, screenHeight, screenWidth / 2, 0, BLACK);
 
