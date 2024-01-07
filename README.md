@@ -11,7 +11,7 @@ This project is a simple implementation of the classic PONG game using the Rayli
 ### Prerequisites
 
 - [Raylib library](https://www.raylib.com/)
-- [C++ compiler](<Link to a suitable C++ compiler>)
+- [C++ compiler](https://www.jetbrains.com/clion/)
 
 ### Usage
 
