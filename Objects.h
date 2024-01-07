@@ -12,6 +12,8 @@ typedef struct TempStruct {
     int player2PaddleY;
     int ballX;
     int ballY;
+    int playerScore1;
+    int playerScore2;
     std::condition_variable changed;
     std::mutex mutex;
 } TempStruct;

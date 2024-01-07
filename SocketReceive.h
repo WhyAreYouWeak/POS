@@ -5,9 +5,9 @@
 #ifndef POS_SOCKETRECEIVE_H
 #define POS_SOCKETRECEIVE_H
 
+#include <condition_variable>
 #include <vector>
 #include <mutex>
-#include <condition_variable>
 #include "Objects.h"
 
 struct MessageBuffer {

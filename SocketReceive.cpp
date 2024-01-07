@@ -4,6 +4,7 @@
 #include "thread"
 #include "SocketReceive.h"
 #include "Objects.h"
+#include <algorithm>
 
 void ReadSocket(SOCKET socket, MessageBuffer& messageBuffer, TempStruct& tempStruct) {
     while (true) {
@@ -13,12 +14,6 @@ void ReadSocket(SOCKET socket, MessageBuffer& messageBuffer, TempStruct& tempStr
             std::unique_lock<std::mutex> lock(messageBuffer.mutex);
 
             messageBuffer.buffer.insert(messageBuffer.buffer.end(), buffer, buffer + bytesRead);
-
-            sscanf(messageBuffer.buffer.data(), "%d,%d,%d,%d", &tempStruct.player1PaddleY, &tempStruct.player2PaddleY, &tempStruct.ballX, &tempStruct.ballY);
-
-            tempStruct.changed.notify_one();
-
-
 /*
             std::cout << "Obsah vektora: ";
             for (size_t i = 0; i < messageBuffer.buffer.size(); ++i) {
@@ -26,6 +21,22 @@ void ReadSocket(SOCKET socket, MessageBuffer& messageBuffer, TempStruct& tempStr
             }
             std::cout << std::endl;
 */
+            auto score = std::find(messageBuffer.buffer.begin(), messageBuffer.buffer.end(), 's');
+            if (score != messageBuffer.buffer.end()) {
+              //  std::cout << "Score changed." << std::endl;
+                int playerScore1 = *(score + 2) - '0';
+                int playerScore2 = *(score + 4) - '0';
+             //   std::cout << "Next two integers after 's': " << playerScore1 << " and " << playerScore2 << std::endl;
+                tempStruct.playerScore1 = playerScore1;
+                tempStruct.playerScore2 = playerScore2;
+            } else {
+                sscanf(messageBuffer.buffer.data(), "%d,%d,%d,%d", &tempStruct.player1PaddleY, &tempStruct.player2PaddleY, &tempStruct.ballX, &tempStruct.ballY);
+            }
+            tempStruct.changed.notify_one();
+
+            messageBuffer.buffer.clear();
+            lock.unlock();
+            messageBuffer.condVar.notify_one();
             /*
             std::cout << std::endl;
             std::cout << "player1PaddleY: " << player1PaddleY << std::endl;
@@ -38,10 +49,6 @@ void ReadSocket(SOCKET socket, MessageBuffer& messageBuffer, TempStruct& tempStr
           //  std::cout << "ballX: " << ballX << std::endl;
           //  std::cout << "ballY: " << ballY << std::endl;
 
-            messageBuffer.buffer.clear();
-            lock.unlock();
-            messageBuffer.condVar.notify_one();
-
             // Ak je prijatá správa ":end", okamžite oznam odpojenie
             if (strstr(buffer, ":end") != nullptr) {
                 //ten sleep tu musi byt, lebo inak sa nestihnu vypisat vsetky spravy v metode PrintMessages
@@ -51,16 +58,19 @@ void ReadSocket(SOCKET socket, MessageBuffer& messageBuffer, TempStruct& tempStr
                 break;
             }
 
-        } else if (bytesRead == 0) {
+        }
+        /*
+        else if (bytesRead == 0) {
             std::cout << "Pripojenie zatvorene serverom." << std::endl;
-            messageBuffer.disconnectFlag = true; // Nastavenie flagu na odpojenie zo servera
-            messageBuffer.condVar.notify_one();   // Oznámenie všetkým vláknami, že je čas skončiť
+            messageBuffer.disconnectFlag = true;
+            messageBuffer.condVar.notify_one();
             break;
         } else {
             std::cerr << "Chyba pri cítani dat zo soketu." << std::endl;
-            messageBuffer.disconnectFlag = true; // Nastavenie flagu na odpojenie zo servera
-            messageBuffer.condVar.notify_one();   // Oznámenie všetkým vláknami, že je čas skončiť
+            messageBuffer.disconnectFlag = true;
+            messageBuffer.condVar.notify_one();
             break;
         }
+         */
     }
 }

@@ -10,12 +10,12 @@ class PongGame {
 private:
     int screenWidth;
     int screenHeight;
+    int player1Score;
+    int player2Score;
     const char* windowTitle;
     Ball ball;
     Paddle player1Paddle;
     Paddle player2Paddle;
-    int player1Score;
-    int player2Score;
     MySocket* socket;
     TempStruct& tempStruct;
 
@@ -28,6 +28,6 @@ public:
     void initializePositions();
     void update();
     //void updateData(MessageBuffer* messageBuffer);
-    void updateData(int player1PaddleY, int player2PaddleY, int ballX, int ballY);
+   // void updateData(int player1PaddleY, int player2PaddleY, int ballX, int ballY);
     void draw();
 };

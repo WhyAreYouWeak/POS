@@ -2,6 +2,7 @@
 #include <iostream>
 #include "PongGame.h"
 #include "Objects.h"
+#include <thread>
 
 PongGame::PongGame(int width, int height, const char* title, MySocket* socket, TempStruct& tempStruct)
         : screenWidth(width), screenHeight(height), windowTitle(title),
@@ -24,6 +25,15 @@ void PongGame::run() {
         update();
         draw();
     }
+/*
+    InitWindow(screenWidth, screenHeight, "End screen");
+    SetTargetFPS(60);
+    DrawText("NDSAJNDSAJKDSANKJ", screenWidth / 2, screenHeight / 2, 40, RED);
+    while (!WindowShouldClose() && !IsKeyDown(KEY_SPACE)) {
+        std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+    }
+    CloseWindow();
+    */
 }
 
 void PongGame::initializePositions() {
@@ -36,7 +46,8 @@ void PongGame::update() {
     ball.setPosition(tempStruct.ballX, tempStruct.ballY);
     player1Paddle.setPositionY(tempStruct.player1PaddleY);
     player2Paddle.setPositionY(tempStruct.player2PaddleY);
-
+    player1Score = tempStruct.playerScore1;
+    player2Score = tempStruct.playerScore2;
     /*
     ball.move();
     ball.bounceOnWall(screenHeight);
@@ -45,12 +56,12 @@ void PongGame::update() {
      */
 
     if (IsKeyDown(KEY_UP)) {
-        std::cout << "Sending up" << std::endl;
+      //  std::cout << "Sending up" << std::endl;
         socket->sendData("up\0");
        // player2Paddle.moveY(screenHeight, -5.0);
     }
     if (IsKeyDown(KEY_DOWN)) {
-        std::cout << "Sending down" << std::endl;
+      //  std::cout << "Sending down" << std::endl;
         socket->sendData("down\0");
       //  player2Paddle.moveY(screenHeight, 5.0);
     }
@@ -60,7 +71,7 @@ void PongGame::update() {
     } else {
         player1Paddle.moveY(screenHeight, 5.0);
     }
-
+/*
     if (ball.getPositionX() <= 0) {
         player2Score++;
         initializePositions();
@@ -68,13 +79,14 @@ void PongGame::update() {
         player1Score++;
         initializePositions();
     }
+    */
 }
 /*
 void updateData(MessageBuffer* messageBuffer) {
     // komunikacia zo servera -> mutex lock a unlock
 }
 */
-
+/*
 void PongGame::updateData(int player1PaddleY, int player2PaddleY, int ballX, int ballY) {
     player1Paddle.setPositionY(player1PaddleY);
     player2Paddle.setPositionY(player2PaddleY);
@@ -85,7 +97,7 @@ void PongGame::updateData(int player1PaddleY, int player2PaddleY, int ballX, int
     std::cout << "ballX: " << ballX << std::endl;
     std::cout << "ballY: " << ballY << std::endl;
 }
-
+*/
 void PongGame::draw() {
     BeginDrawing();
 
@@ -109,6 +121,14 @@ void PongGame::draw() {
 
     DrawText("Player 2", 3 * screenWidth / 4 + 40, 20, textFontSize, WHITE);
     DrawText(std::to_string(player2Score).c_str(), 3 * screenWidth / 4, 20, scoreFontSize, BLUE);
+
+    if (player1Score == 5) {
+        DrawText("GAME OVER", screenWidth / 2 - MeasureText("GAME OVER", 40) / 2, screenHeight / 2 - 40, scoreFontSize, BLACK);
+        DrawText("Player 1 WON", screenWidth / 2 - MeasureText("Player 1 WON", 40) / 2, screenHeight / 2, scoreFontSize, RED);
+    } else if (player2Score == 5) {
+        DrawText("GAME OVER", screenWidth / 2 - MeasureText("GAME OVER", 40) / 2, screenHeight / 2 - 40, scoreFontSize, BLACK);
+        DrawText("Player 2 WON", screenWidth / 2 - MeasureText("Player 2 WON", 40) / 2, screenHeight / 2, scoreFontSize, BLUE);
+    }
 
     EndDrawing();
 }
