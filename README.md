@@ -19,5 +19,5 @@ This project is a simple implementation of the classic PONG game using the Rayli
 - Connect to the game server for multiplayer support.
 ## Authors
 
-- (https://github.com/WhyAreYouWeak)
-- (https://github.com/patrikkuric)
+- [Daniel Zarodnansky](https://github.com/WhyAreYouWeak)
+- [Patrik Kuric](https://github.com/patrikkuric)
