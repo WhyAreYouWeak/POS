@@ -3,8 +3,6 @@
 #include <algorithm>
 #include <iostream>
 #include "PongGame.h"
-#include <stdio.h>
-#include <cmath>
 #include <unistd.h>
 
 PongGame::PongGame(int width, int height)
@@ -18,16 +16,12 @@ PongGame::~PongGame() {
 }
 
 void PongGame::run() {
-   // player1Score = 0;
-  //  player2Score = 0;
     initializePositions();
 
     while (true) {
         update();
 
         if (gameScore.playerScore1 == 5 || gameScore.playerScore2 == 5) {
-
-            //std::cout << "*********************************************************************************************" << std::endl;
             std::cout << "Game has ended!" << std::endl;
             std::cout << "Player 1 finished the game with score: " << gameScore.playerScore1 << std::endl;
             std::cout << "Player 2 finished the game with score: " << gameScore.playerScore2 << std::endl;
@@ -43,8 +37,6 @@ void PongGame::initializePositions() {
 }
 
 void PongGame::update() {
-    //std::cout << "Ball X: " << ball.getPositionX() << std::endl;
-   // std::cout << "Ball Y: " << ball.getPositionX() << std::endl;
     usleep(25000); // 15 ms
     ball.move();
     ball.bounceOnWall(screenHeight);
@@ -65,10 +57,8 @@ void PongGame::update() {
 void PongGame::updatePaddle(int playerNumber, int direction) {
     if (playerNumber == 1) {
         player1Paddle.moveY(screenHeight, 5.0 * direction);
-       // std::cout << "Player1 Paddle Y: " << player1Paddle.getPositionY() << std::endl;
     } else if (playerNumber == 2){
         player2Paddle.moveY(screenHeight, 5.0 * direction);
-      //  std::cout << "Player2 Paddle Y: " << player2Paddle.getPositionY() << std::endl;
     }
 }
 

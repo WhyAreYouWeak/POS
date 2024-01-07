@@ -25,15 +25,6 @@ void PongGame::run() {
         update();
         draw();
     }
-/*
-    InitWindow(screenWidth, screenHeight, "End screen");
-    SetTargetFPS(60);
-    DrawText("NDSAJNDSAJKDSANKJ", screenWidth / 2, screenHeight / 2, 40, RED);
-    while (!WindowShouldClose() && !IsKeyDown(KEY_SPACE)) {
-        std::this_thread::sleep_for(std::chrono::milliseconds(1000));
-    }
-    CloseWindow();
-    */
 }
 
 void PongGame::initializePositions() {
@@ -48,22 +39,12 @@ void PongGame::update() {
     player2Paddle.setPositionY(tempStruct.player2PaddleY);
     player1Score = tempStruct.playerScore1;
     player2Score = tempStruct.playerScore2;
-    /*
-    ball.move();
-    ball.bounceOnWall(screenHeight);
-    ball.bounceOnPaddle(player1Paddle);
-    ball.bounceOnPaddle(player2Paddle);
-     */
 
     if (IsKeyDown(KEY_UP)) {
-      //  std::cout << "Sending up" << std::endl;
         socket->sendData("up\0");
-       // player2Paddle.moveY(screenHeight, -5.0);
     }
     if (IsKeyDown(KEY_DOWN)) {
-      //  std::cout << "Sending down" << std::endl;
         socket->sendData("down\0");
-      //  player2Paddle.moveY(screenHeight, 5.0);
     }
 
     if (ball.getPositionY() < player1Paddle.getPositionY() + player1Paddle.getHeight() / 2) {
@@ -71,33 +52,9 @@ void PongGame::update() {
     } else {
         player1Paddle.moveY(screenHeight, 5.0);
     }
-/*
-    if (ball.getPositionX() <= 0) {
-        player2Score++;
-        initializePositions();
-    } else if (ball.getPositionX() >= screenWidth) {
-        player1Score++;
-        initializePositions();
-    }
-    */
-}
-/*
-void updateData(MessageBuffer* messageBuffer) {
-    // komunikacia zo servera -> mutex lock a unlock
-}
-*/
-/*
-void PongGame::updateData(int player1PaddleY, int player2PaddleY, int ballX, int ballY) {
-    player1Paddle.setPositionY(player1PaddleY);
-    player2Paddle.setPositionY(player2PaddleY);
-    ball.setPosition(ballX, ballY);
 
-    std::cout << "player1PaddleY: " << player1PaddleY << std::endl;
-    std::cout << "player2PaddleY: " << player2PaddleY << std::endl;
-    std::cout << "ballX: " << ballX << std::endl;
-    std::cout << "ballY: " << ballY << std::endl;
 }
-*/
+
 void PongGame::draw() {
     BeginDrawing();
 

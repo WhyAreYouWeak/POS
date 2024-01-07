@@ -1,5 +1,4 @@
 #include <stdio.h>
-#include <stdlib.h>
 #include <stdbool.h>
 #include <cstring>
 #include <strings.h>
@@ -25,10 +24,8 @@ _Bool deserializeCommand(int* direction, struct char_buffer* buf) {
     }
 }
 
-//GENERATE_BUFFER(struct point, point)
 
 typedef struct thread_data {
-    //  struct buffer_point buf;
     pthread_mutex_t mutex;
     pthread_cond_t is_full;
     pthread_cond_t is_empty;
@@ -41,7 +38,6 @@ typedef struct thread_data {
 void thread_data_init(struct thread_data* data,
                       short port, ACTIVE_SOCKET* my_socket,
                       PongGame* pongGame, int player) {
-    // buffer_point_init(&data->buf, buffer_capacity);
     pthread_mutex_init(&data->mutex, NULL);
     pthread_cond_init(&data->is_full, NULL);
     pthread_cond_init(&data->is_empty, NULL);
@@ -53,7 +49,6 @@ void thread_data_init(struct thread_data* data,
 }
 
 void thread_data_destroy(struct thread_data* data) {
-    //buffer_point_destroy(&data->buf);
     pthread_mutex_destroy(&data->mutex);
     pthread_cond_destroy(&data->is_full);
     pthread_cond_destroy(&data->is_empty);
@@ -76,36 +71,9 @@ void* process_client_data(void* thread_data) {
     printf("Player Disconnected\n");
     return NULL;
 }
-/*
+
 void* produce(void* thread_data) {
     struct thread_data* data = (struct thread_data*)thread_data;
-
-    for (long long i = 1; i <= data->replications_count; ++i) {
-        POINT item = generate_point();
-
-        pthread_mutex_lock(&data->mutex);
-        while (!buffer_point_try_push(&data->buf, item)) {
-            pthread_cond_wait(&data->is_empty, &data->mutex);
-        }
-        pthread_cond_signal(&data->is_full);
-        pthread_mutex_unlock(&data->mutex);
-    }
-    return NULL;
-}
-*/
-void* produce(void* thread_data) {
-    struct thread_data* data = (struct thread_data*)thread_data;
-/*
-    const char* coords = strdup(data->pongGame->getCoords().c_str());
-    size_t data_length = strlen(coords);
-    char* buffer = (char*)calloc(data_length + 1, sizeof(char));
-    strcpy(buffer, coords);
-    std::cout << "Posielam data: " << buffer << ", klientovi: " << data->player << std::endl;
-
-    active_socket_write_data(data->my_socket, reinterpret_cast<char_buffer *>(&buffer));
-    free(buffer);
-    */
-
     std::string coordsPrev;
     GameScore gameScorePrev;
     GameScore gameScore;
@@ -124,7 +92,6 @@ void* produce(void* thread_data) {
             std::string str = "s:" + std::to_string(static_cast<int>(gameScore.playerScore1)) + ","
                               + std::to_string(static_cast<int>(gameScore.playerScore2));
             const char *strToSend = str.c_str();
-            // std::cout << "Sending score: " << str << std::endl;
             char_buffer_append(&r_buf, strToSend, strlen(strToSend));
             active_socket_write_data(data->my_socket, &r_buf);
             continue;
@@ -137,21 +104,12 @@ void* produce(void* thread_data) {
         coordsPrev = coordsStr;
         gameScorePrev = gameScore;
         const char *coords = coordsStr.c_str();
-/*
-        size_t data_length = strlen(coords);
-        char *buffer = (char *) calloc(data_length + 1, sizeof(char));
-        strcpy(buffer, coords);
-        buffer[data_length] = '\0';
-*/
+
         CHAR_BUFFER r_buf;
         char_buffer_init(&r_buf);
         char_buffer_append(&r_buf, coords, strlen(coords));
-
-        //  std::cout << "Posielam data: " << coords << ", klientovi: " << data->player << std::endl;
-
         active_socket_write_data(data->my_socket, &r_buf);
 
-        //   free(buffer);
     }
 }
 
@@ -183,7 +141,6 @@ void* consume(void* thread_data) {
     if (data->my_socket != NULL) {
         while (active_socket_is_reading(data->my_socket)) {
             std::this_thread::sleep_for(std::chrono::milliseconds(1));
-            //std::cout << active_socket_is_reading(data->my_socket) << std::endl;
             if (getClientCommand(data->my_socket, &direction)) {
                 data->pongGame->updatePaddle(data->player, direction);
             }

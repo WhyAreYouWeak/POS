@@ -27,7 +27,5 @@ public:
     void run();
     void initializePositions();
     void update();
-    //void updateData(MessageBuffer* messageBuffer);
-   // void updateData(int player1PaddleY, int player2PaddleY, int ballX, int ballY);
     void draw();
 };
