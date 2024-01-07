@@ -17,3 +17,7 @@ This project is a simple implementation of the classic PONG game using the Rayli
 
 - Use the arrow keys for Player controls.
 - Connect to the game server for multiplayer support.
+## Authors
+
+- (@WhyAreYouWeak)
+- (@patrikkuric)
