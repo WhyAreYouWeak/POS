@@ -6,7 +6,7 @@
 #include "Objects.h"
 
 int main() {
-    MySocket* mySocket = MySocket::createConnection("frios2.fri.uniza.sk", 19195);
+    MySocket* mySocket = MySocket::createConnection("frios2.fri.uniza.sk", 12456);
     MessageBuffer messageBuffer;
     TempStruct tempStruct;
     std::thread readThread(ReadSocket, mySocket->connectSocket, std::ref(messageBuffer), std::ref(tempStruct));
