@@ -2,7 +2,8 @@
 #include "Ball.h"
 #include "Paddle.h"
 #include <string>
-
+#include <mutex>
+#include "Objects.h"
 class PongGame {
 private:
     int screenWidth;

@@ -4,9 +4,9 @@
 #include <cstring>
 #include <strings.h>
 #include <pthread.h>
-#include "pos_sockets/char_buffer.h"
-#include "pos_sockets/active_socket.h"
-#include "pos_sockets/passive_socket.h"
+#include "char_buffer.h"
+#include "active_socket.h"
+#include "passive_socket.h"
 #include "PongGame.h"
 #include "Objects.h"
 #include <iostream>
@@ -111,6 +111,7 @@ void* produce(void* thread_data) {
 
         active_socket_write_data(data->my_socket, &r_buf);
     }
+    return nullptr;
 }
 
 _Bool getClientCommand(struct active_socket* my_sock, int* direction) {

@@ -2,9 +2,7 @@
 // Created by Patrik Kuric on 1/5/2024.
 //
 
-#ifndef SKUSKA05_SOKETY_SERVER_OBJECTS_H
-#define SKUSKA05_SOKETY_SERVER_OBJECTS_H
-
+#pragma once
 #if defined(__cplusplus)
 #define CLITERAL(type)      type
 #else
@@ -76,4 +74,3 @@ typedef struct TempStruct {
 bool CheckCollisionCircleRec(Vector2 center, float radius, Rectangle rec);
 int GetRandomValue(int min, int max);
 
-#endif //SKUSKA05_SOKETY_SERVER_OBJECTS_H

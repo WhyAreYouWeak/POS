@@ -3,6 +3,7 @@
 #include "SocketReceive.h"
 #include "Objects.h"
 #include <algorithm>
+#include <cstdio>
 
 void ReadSocket(SOCKET socket, MessageBuffer& messageBuffer, TempStruct& tempStruct) {
     while (true) {

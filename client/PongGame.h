@@ -2,7 +2,7 @@
 #include "Ball.h"
 #include "Paddle.h"
 #include "raylib.h"
-#include "sockets/my_socket.h"
+#include "my_socket.h"
 #include "SocketReceive.h"
 #include "Objects.h"
 #include <thread>

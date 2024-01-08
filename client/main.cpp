@@ -1,5 +1,5 @@
 #include <thread>
-#include "sockets/my_socket.h"
+#include "my_socket.h"
 #include "SocketReceive.h"
 #include "PongGame.h"
 #include <crtdbg.h>

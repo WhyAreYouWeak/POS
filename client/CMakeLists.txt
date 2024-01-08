@@ -7,11 +7,11 @@ add_subdirectory(raylib)
 add_executable(POS main.cpp
         Paddle.h
         Ball.h
-        sockets/my_socket.h
+        my_socket.h
         main.cpp
         Ball.cpp
         Paddle.cpp
-        sockets/my_socket.cpp SocketReceive.cpp SocketReceive.h PongGame.cpp PongGame.h Objects.cpp Objects.h)
+        my_socket.cpp SocketReceive.cpp SocketReceive.h PongGame.cpp PongGame.h Objects.cpp Objects.h)
 target_link_libraries(POS PRIVATE raylib wsock32 ws2_32)
 
 
