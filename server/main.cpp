@@ -167,6 +167,7 @@ int main() {
 
     struct thread_data dataClient1;
     struct thread_data dataClient2;
+
     thread_data_init(&dataClient1, 19195, &socketClient1, &pongGame, 1);
     thread_data_init(&dataClient2, 12456, &socketClient2, &pongGame, 2);
 
