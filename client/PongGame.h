@@ -5,6 +5,7 @@
 #include "sockets/my_socket.h"
 #include "SocketReceive.h"
 #include "Objects.h"
+#include <thread>
 
 class PongGame {
 private:
@@ -18,6 +19,7 @@ private:
     Paddle player2Paddle;
     MySocket* socket;
     TempStruct& tempStruct;
+    std::mutex mutex;
 
 public:
     PongGame(int width, int height, const char* title, MySocket* socket, TempStruct& tempStruct);
@@ -27,5 +29,7 @@ public:
     void run();
     void initializePositions();
     void update();
+    //void updateData(MessageBuffer* messageBuffer);
+   // void updateData(int player1PaddleY, int player2PaddleY, int ballX, int ballY);
     void draw();
 };

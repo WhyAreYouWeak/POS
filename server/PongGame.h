@@ -12,16 +12,18 @@ private:
     Paddle player2Paddle;
     int player1Score;
     int player2Score;
-    GameScore gameScore;
+    TempStruct tempStruct;
+    std::mutex mutex;
 
 public:
     ~PongGame();
     PongGame(int width, int height);
 
+  //  void updateData(MessageBuffer& messageBuffer);
     void run();
     void initializePositions();
     void update();
     void updatePaddle(int playerNumber, int direction);
     std::string getCoords();
-    GameScore getScore();
+    std::string getScore();
 };

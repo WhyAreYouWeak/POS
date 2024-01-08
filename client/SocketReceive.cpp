@@ -10,7 +10,7 @@ void ReadSocket(SOCKET socket, MessageBuffer& messageBuffer, TempStruct& tempStr
         char buffer[1024];
         int bytesRead = recv(socket, buffer, sizeof(buffer), 0);
         if (bytesRead > 0) {
-            std::unique_lock<std::mutex> lock(messageBuffer.mutex);
+            std::unique_lock<std::mutex> lock(tempStruct.mutex);
 
             messageBuffer.buffer.insert(messageBuffer.buffer.end(), buffer, buffer + bytesRead);
 
@@ -23,19 +23,18 @@ void ReadSocket(SOCKET socket, MessageBuffer& messageBuffer, TempStruct& tempStr
             } else {
                 sscanf(messageBuffer.buffer.data(), "%d,%d,%d,%d", &tempStruct.player1PaddleY, &tempStruct.player2PaddleY, &tempStruct.ballX, &tempStruct.ballY);
             }
-            tempStruct.changed.notify_one();
 
             messageBuffer.buffer.clear();
             lock.unlock();
-            messageBuffer.condVar.notify_one();
 
+
+            messageBuffer.condVar.notify_one();
             if (strstr(buffer, ":end") != nullptr) {
                 Sleep(5);
                 messageBuffer.disconnectFlag = true;
                 messageBuffer.condVar.notify_one();
                 break;
             }
-
         }
     }
 }

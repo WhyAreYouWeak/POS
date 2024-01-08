@@ -3,6 +3,7 @@
 #include "PongGame.h"
 #include "Objects.h"
 #include <thread>
+#include <mutex>
 
 PongGame::PongGame(int width, int height, const char* title, MySocket* socket, TempStruct& tempStruct)
         : screenWidth(width), screenHeight(height), windowTitle(title),
@@ -25,6 +26,15 @@ void PongGame::run() {
         update();
         draw();
     }
+/*
+    InitWindow(screenWidth, screenHeight, "End screen");
+    SetTargetFPS(60);
+    DrawText("NDSAJNDSAJKDSANKJ", screenWidth / 2, screenHeight / 2, 40, RED);
+    while (!WindowShouldClose() && !IsKeyDown(KEY_SPACE)) {
+        std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+    }
+    CloseWindow();
+    */
 }
 
 void PongGame::initializePositions() {
@@ -34,11 +44,13 @@ void PongGame::initializePositions() {
 }
 
 void PongGame::update() {
+    std::unique_lock<std::mutex> lock(tempStruct.mutex);
     ball.setPosition(tempStruct.ballX, tempStruct.ballY);
     player1Paddle.setPositionY(tempStruct.player1PaddleY);
     player2Paddle.setPositionY(tempStruct.player2PaddleY);
     player1Score = tempStruct.playerScore1;
     player2Score = tempStruct.playerScore2;
+    lock.unlock();
 
     if (IsKeyDown(KEY_UP)) {
         socket->sendData("up\0");
@@ -47,13 +59,25 @@ void PongGame::update() {
         socket->sendData("down\0");
     }
 
-    if (ball.getPositionY() < player1Paddle.getPositionY() + player1Paddle.getHeight() / 2) {
-        player1Paddle.moveY(screenHeight, -5.0);
-    } else {
-        player1Paddle.moveY(screenHeight, 5.0);
-    }
-
 }
+
+/*
+void updateData(MessageBuffer* messageBuffer) {
+    // komunikacia zo servera -> mutex lock a unlock
+}
+*/
+/*
+void PongGame::updateData(int player1PaddleY, int player2PaddleY, int ballX, int ballY) {
+    player1Paddle.setPositionY(player1PaddleY);
+    player2Paddle.setPositionY(player2PaddleY);
+    ball.setPosition(ballX, ballY);
+
+    std::cout << "player1PaddleY: " << player1PaddleY << std::endl;
+    std::cout << "player2PaddleY: " << player2PaddleY << std::endl;
+    std::cout << "ballX: " << ballX << std::endl;
+    std::cout << "ballY: " << ballY << std::endl;
+}
+*/
 
 void PongGame::draw() {
     BeginDrawing();

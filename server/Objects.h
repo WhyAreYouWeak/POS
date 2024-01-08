@@ -39,6 +39,10 @@
 #define MAGENTA    CLITERAL(Color){ 255, 0, 255, 255 }     // Magenta
 #define RAYWHITE   CLITERAL(Color){ 245, 245, 245, 255 }   // My own White (raylib logo)
 
+#include <mutex>
+#include <condition_variable>
+
+
 typedef struct Rectangle {
     float x;
     float y;
@@ -58,10 +62,16 @@ typedef struct Color {
     unsigned char a;
 } Color;
 
-typedef struct GameScore {
+typedef struct TempStruct {
+    int player1PaddleY;
+    int player2PaddleY;
+    int ballX;
+    int ballY;
     int playerScore1;
     int playerScore2;
-} GameScore;
+    std::condition_variable changed;
+    std::mutex mutex;
+} TempStruct;
 
 bool CheckCollisionCircleRec(Vector2 center, float radius, Rectangle rec);
 int GetRandomValue(int min, int max);

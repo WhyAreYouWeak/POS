@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include <stdbool.h>
 #include <cstring>
 #include <strings.h>
@@ -24,8 +25,10 @@ _Bool deserializeCommand(int* direction, struct char_buffer* buf) {
     }
 }
 
+//GENERATE_BUFFER(struct point, point)
 
 typedef struct thread_data {
+  //  struct buffer_point buf;
     pthread_mutex_t mutex;
     pthread_cond_t is_full;
     pthread_cond_t is_empty;
@@ -38,6 +41,7 @@ typedef struct thread_data {
 void thread_data_init(struct thread_data* data,
                       short port, ACTIVE_SOCKET* my_socket,
                       PongGame* pongGame, int player) {
+   // buffer_point_init(&data->buf, buffer_capacity);
     pthread_mutex_init(&data->mutex, NULL);
     pthread_cond_init(&data->is_full, NULL);
     pthread_cond_init(&data->is_empty, NULL);
@@ -49,6 +53,7 @@ void thread_data_init(struct thread_data* data,
 }
 
 void thread_data_destroy(struct thread_data* data) {
+    //buffer_point_destroy(&data->buf);
     pthread_mutex_destroy(&data->mutex);
     pthread_cond_destroy(&data->is_full);
     pthread_cond_destroy(&data->is_empty);
@@ -71,26 +76,41 @@ void* process_client_data(void* thread_data) {
     printf("Player Disconnected\n");
     return NULL;
 }
+/*
+void* produce(void* thread_data) {
+    struct thread_data* data = (struct thread_data*)thread_data;
 
+    for (long long i = 1; i <= data->replications_count; ++i) {
+        POINT item = generate_point();
+
+        pthread_mutex_lock(&data->mutex);
+        while (!buffer_point_try_push(&data->buf, item)) {
+            pthread_cond_wait(&data->is_empty, &data->mutex);
+        }
+        pthread_cond_signal(&data->is_full);
+        pthread_mutex_unlock(&data->mutex);
+    }
+    return NULL;
+}
+*/
 void* produce(void* thread_data) {
     struct thread_data* data = (struct thread_data*)thread_data;
     std::string coordsPrev;
-    GameScore gameScorePrev;
-    GameScore gameScore;
+    std::string gameScorePrev;
     while (true) {
         if (!gameIsRunning) {
             break;
         }
         std::this_thread::sleep_for(std::chrono::milliseconds(1));
         std::string coordsStr = data->pongGame->getCoords();
-        gameScore = data->pongGame->getScore();
-        if (gameScore.playerScore1 != gameScorePrev.playerScore1 ||
-            gameScore.playerScore2 != gameScorePrev.playerScore2) {
+        std::string gameScore = data->pongGame->getScore();
+
+        if (gameScore != gameScorePrev) {
             gameScorePrev = gameScore;
+
             CHAR_BUFFER r_buf;
             char_buffer_init(&r_buf);
-            std::string str = "s:" + std::to_string(static_cast<int>(gameScore.playerScore1)) + ","
-                              + std::to_string(static_cast<int>(gameScore.playerScore2));
+            std::string str = "s:" + gameScore;
             const char *strToSend = str.c_str();
             char_buffer_append(&r_buf, strToSend, strlen(strToSend));
             active_socket_write_data(data->my_socket, &r_buf);
@@ -104,12 +124,11 @@ void* produce(void* thread_data) {
         coordsPrev = coordsStr;
         gameScorePrev = gameScore;
         const char *coords = coordsStr.c_str();
-
         CHAR_BUFFER r_buf;
         char_buffer_init(&r_buf);
         char_buffer_append(&r_buf, coords, strlen(coords));
-        active_socket_write_data(data->my_socket, &r_buf);
 
+        active_socket_write_data(data->my_socket, &r_buf);
     }
 }
 
@@ -120,7 +139,6 @@ _Bool getClientCommand(struct active_socket* my_sock, int* direction) {
 
     if(active_socket_try_get_read_data(my_sock, &r_buf)) {
         if(r_buf.size > 0) {
-            //   std::cout << r_buf.data << std::endl;
             if(active_socket_is_end_message(my_sock, &r_buf)) {
                 active_socket_stop_reading(my_sock);
             } else if (deserializeCommand(direction, &r_buf)) {
@@ -130,6 +148,7 @@ _Bool getClientCommand(struct active_socket* my_sock, int* direction) {
             }
         }
     }
+
     char_buffer_destroy(&r_buf);
     return result;
 }
@@ -167,7 +186,6 @@ int main() {
 
     struct thread_data dataClient1;
     struct thread_data dataClient2;
-
     thread_data_init(&dataClient1, 19195, &socketClient1, &pongGame, 1);
     thread_data_init(&dataClient2, 12456, &socketClient2, &pongGame, 2);
 
