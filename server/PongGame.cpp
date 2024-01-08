@@ -25,7 +25,6 @@ void PongGame::run() {
 
         if (player1Score == 5 || player2Score == 5) {
 
-            //std::cout << "*********************************************************************************************" << std::endl;
             std::cout << "Game has ended!" << std::endl;
             std::cout << "Player 1 finished the game with score: " << player1Score << std::endl;
             std::cout << "Player 2 finished the game with score: " << player2Score << std::endl;

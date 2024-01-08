@@ -19,7 +19,6 @@ public:
     ~PongGame();
     PongGame(int width, int height);
 
-  //  void updateData(MessageBuffer& messageBuffer);
     void run();
     void initializePositions();
     void update();

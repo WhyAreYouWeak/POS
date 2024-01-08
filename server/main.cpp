@@ -28,7 +28,6 @@ _Bool deserializeCommand(int* direction, struct char_buffer* buf) {
 //GENERATE_BUFFER(struct point, point)
 
 typedef struct thread_data {
-  //  struct buffer_point buf;
     pthread_mutex_t mutex;
     pthread_cond_t is_full;
     pthread_cond_t is_empty;
@@ -41,7 +40,6 @@ typedef struct thread_data {
 void thread_data_init(struct thread_data* data,
                       short port, ACTIVE_SOCKET* my_socket,
                       PongGame* pongGame, int player) {
-   // buffer_point_init(&data->buf, buffer_capacity);
     pthread_mutex_init(&data->mutex, NULL);
     pthread_cond_init(&data->is_full, NULL);
     pthread_cond_init(&data->is_empty, NULL);
@@ -53,7 +51,6 @@ void thread_data_init(struct thread_data* data,
 }
 
 void thread_data_destroy(struct thread_data* data) {
-    //buffer_point_destroy(&data->buf);
     pthread_mutex_destroy(&data->mutex);
     pthread_cond_destroy(&data->is_full);
     pthread_cond_destroy(&data->is_empty);
@@ -76,23 +73,7 @@ void* process_client_data(void* thread_data) {
     printf("Player Disconnected\n");
     return NULL;
 }
-/*
-void* produce(void* thread_data) {
-    struct thread_data* data = (struct thread_data*)thread_data;
 
-    for (long long i = 1; i <= data->replications_count; ++i) {
-        POINT item = generate_point();
-
-        pthread_mutex_lock(&data->mutex);
-        while (!buffer_point_try_push(&data->buf, item)) {
-            pthread_cond_wait(&data->is_empty, &data->mutex);
-        }
-        pthread_cond_signal(&data->is_full);
-        pthread_mutex_unlock(&data->mutex);
-    }
-    return NULL;
-}
-*/
 void* produce(void* thread_data) {
     struct thread_data* data = (struct thread_data*)thread_data;
     std::string coordsPrev;

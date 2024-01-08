@@ -1,7 +1,3 @@
-//
-// Created by Patrik Kuric on 1/5/2024.
-//
-
 #ifndef POS_SOCKETRECEIVE_H
 #define POS_SOCKETRECEIVE_H
 
@@ -12,9 +8,8 @@
 
 struct MessageBuffer {
     std::vector<char> buffer;
-    std::mutex mutex;
     std::condition_variable condVar;
-    bool disconnectFlag = false; // Flag pre odpojenie zo servera
+    bool disconnectFlag = false;
 };
 
 void ReadSocket(unsigned long long socket, MessageBuffer& messageBuffer, TempStruct& tempStruct);

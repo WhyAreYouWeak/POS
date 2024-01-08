@@ -26,15 +26,6 @@ void PongGame::run() {
         update();
         draw();
     }
-/*
-    InitWindow(screenWidth, screenHeight, "End screen");
-    SetTargetFPS(60);
-    DrawText("NDSAJNDSAJKDSANKJ", screenWidth / 2, screenHeight / 2, 40, RED);
-    while (!WindowShouldClose() && !IsKeyDown(KEY_SPACE)) {
-        std::this_thread::sleep_for(std::chrono::milliseconds(1000));
-    }
-    CloseWindow();
-    */
 }
 
 void PongGame::initializePositions() {
@@ -60,24 +51,6 @@ void PongGame::update() {
     }
 
 }
-
-/*
-void updateData(MessageBuffer* messageBuffer) {
-    // komunikacia zo servera -> mutex lock a unlock
-}
-*/
-/*
-void PongGame::updateData(int player1PaddleY, int player2PaddleY, int ballX, int ballY) {
-    player1Paddle.setPositionY(player1PaddleY);
-    player2Paddle.setPositionY(player2PaddleY);
-    ball.setPosition(ballX, ballY);
-
-    std::cout << "player1PaddleY: " << player1PaddleY << std::endl;
-    std::cout << "player2PaddleY: " << player2PaddleY << std::endl;
-    std::cout << "ballX: " << ballX << std::endl;
-    std::cout << "ballY: " << ballY << std::endl;
-}
-*/
 
 void PongGame::draw() {
     BeginDrawing();
