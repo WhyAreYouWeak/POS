@@ -22,26 +22,26 @@ ifeq ($(OS), Windows_NT)
 	gcc -std=c++23 $(CLIENT_INC) $^ -o ./Build/Client/$@ $(CLIENT_LIBS)
 endif
 
-  
+#---------------------------------------------------------------------------------------
 SERVER_SRC=server/main.cpp \
 		   server/PongGame.cpp \
 		   server/Ball.cpp\
 		   server/Paddle.cpp\
-		   server/active_socket.c\
-		   server/char_buffer.c\
+		   server/active_socket.cpp\
+		   server/char_buffer.cpp\
 		   server/Objects.cpp\
-		   server/passive_socket.c
-SERVER_LIBS=
+		   server/passive_socket.cpp
+SERVER_LIBS=-pthread -lstdc++ -lm
 SERVER_OBJS=$(patsubst server/%.cpp,Build/Server/%.o,$(SERVER_SRC))
 
-Build/Server/%.o: server%.cpp
+Build/Server/%.o: server/%.cpp
 	-@mkdir -p ./Build/Server
-	gcc -std=c++23 -c $< -o $@ $(SERVER_LIBS)
+	gcc -std=c++17 -c $< -o $@ $(SERVER_LIBS)
 
 
 Server: $(SERVER_OBJS)
 	-@mkdir -p ./Build/Server
-	gcc -std=c++23 $^ -o ./Build/Server/$@ $(SERVER_LIBS)
+	gcc -std=c++17 $^ -o ./Build/Server/$@ $(SERVER_LIBS)
 
 
 Clean:

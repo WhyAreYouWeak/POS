@@ -4,11 +4,11 @@ project(server C CXX)
 set(CMAKE_CXX_STANDARD 17)
 
 add_executable(server main.cpp buffer.h
-        active_socket.c
+        active_socket.cpp
         active_socket.h
-        passive_socket.c
+        passive_socket.cpp
         passive_socket.h
-        char_buffer.c
+        char_buffer.cpp
         char_buffer.h
         linked_list.h
         Ball.cpp
